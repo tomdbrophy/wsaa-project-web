@@ -1,0 +1,279 @@
+<html>
+    <head>
+        <title>Teaching Activities</title>
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+        <!-- jQuery -->
+         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+         <script>
+            var activities = [];
+            // Function to fetch activities from the server
+         function getActivities(){
+                $.ajax({
+                    'url': '/activities',
+                    'method': 'GET',
+                    'data':'',
+                    'dataType': 'JSON',
+                    'success': function(result){
+                        console.log(result)
+                        activities = result;
+                        return activities;
+                    }
+                })
+            }
+        </script>
+    </head>
+    <body>
+        <h1>Teaching Activities</h1>
+        <button onclick="populateTable(activities), showAll()" class="btn btn-primary">Get Activities</button>
+        <button onclick="showUpdate()" class="btn btn-secondary">Update Activity</button>
+        <button onclick="showDelete()" class="btn btn-danger">Delete Activity</button>
+        <button onclick="showCreate()" class="btn btn-success">Create Activity</button>
+
+        <div id="allActivitiesTable" style="display: none;">
+            <h2>Teaching Activities</h2>
+            <table class="table table-striped" id="activitiesTable">
+                <thead>
+                    <tr>
+                        <th>Activity ID</th>
+                        <th>Student Group</th>
+                        <th>Module</th>
+                        <th>Staff</th>
+                        <th>Activity Type</th>
+                        <th>Activity Duration</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                    
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="updateActivity" style="display: none;">
+            <table class="table table-striped" id="updateTable" style="width: 30%;">
+                <tr>
+                    <th colspan="2"><h2>Update Activity</h2></th>
+                </tr>
+                <tr>
+                    <td>ID:</td>
+                    <td><input type="text" id="activityId" placeholder="Activity ID"></td>
+                </tr>
+                <tr>
+                    <td>Student Group:</td>
+                    <td><input type="text" id="studentGroup" placeholder="Student Group"></td>
+                </tr>
+                <tr>
+                    <td>Module:</td>
+                    <td><input type="text" id="module" placeholder="Module"></td>
+                </tr>
+                <tr>
+                    <td>Staff:</td>
+                    <td><input type="text" id="staff" placeholder="Staff"></td>
+                </tr>
+                <tr>
+                    <td>Activity Type:</td>
+                    <td><input type="text" id="activityType" placeholder="Activity Type"></td>
+                </tr>
+                <tr>
+                    <td>Activity Duration:</td>
+                    <td><input type="text" id="activityDuration" placeholder="Activity Duration"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button onclick="updateActivity()" class="btn btn-primary">Update Activity</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="deleteActivity" style="display: none;">
+            <table class="table table-striped" id="deleteTable" style="width: 30%;">
+                <tr>
+                    <th colspan="2"><h2>Delete Activity</h2></th>
+                </tr>
+                <tr>
+                    <td>ID:</td>
+                    <td><input type="text" id="deleteActivityId" placeholder="Activity ID"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button onclick="deleteActivity()" class="btn btn-danger">Delete Activity</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="createActivity" style="display: none;">
+            <table class="table table-striped" id="createTable" style="width: 30%;">
+                <tr>
+                    <th colspan="2"><h2>Create Activity</h2></th>
+                </tr>
+                <tr>
+                    <td>Student Group:</td>
+                    <td><input type="text" id="studentGroupCreate" placeholder="Student Group"></td>
+                </tr>
+                <tr>
+                    <td>Module:</td>
+                    <td><input type="text" id="moduleCreate" placeholder="Module"></td>
+                </tr>
+                <tr>
+                    <td>Staff:</td>
+                    <td><input type="text" id="staffCreate" placeholder="Staff"></td>
+                </tr>
+                <tr>
+                    <td>Activity Type:</td>
+                    <td><input type="text" id="activityTypeCreate" placeholder="Activity Type"></td>
+                </tr>
+                <tr>
+                    <td>Activity Duration:</td>
+                    <td><input type="text" id="activityDurationCreate" placeholder="Activity Duration"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button onclick="createActivity()" class="btn btn-success">Create Activity</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <script>
+            // Function to populate the table with activities
+            // This function is called when the button is clicked
+            // It fetches the activities from the server and populates the table
+            function populateTable(activities) {
+                getActivities();
+                var tableRows = document.getElementById('activitiesTable').rows.length;
+                for (var i = 0; i < tableRows; i++) {
+                    document.getElementById('activitiesTable').deleteRow(0);
+                }
+                for (var i = 0; i < activities.length; i++) {
+                    var tableElement = document.getElementById('activitiesTable')
+                    var rowElement = tableElement.insertRow(-1)
+
+                    var idCell = rowElement.insertCell(0);
+                    var studentCell = rowElement.insertCell(1);
+                    var moduleCell = rowElement.insertCell(2);
+                    var staffCell = rowElement.insertCell(3);
+                    var activityTypeCell = rowElement.insertCell(4);
+                    var activityDurationCell = rowElement.insertCell(5);
+
+                    idCell.innerHTML = activities[i].activity_id;
+                    studentCell.innerHTML = activities[i].student_group;
+                    moduleCell.innerHTML = activities[i].module_name;
+                    staffCell.innerHTML = activities[i].staff_name;
+                    activityTypeCell.innerHTML = activities[i].activity_type;
+                    activityDurationCell.innerHTML = activities[i].activity_duration;
+                }
+            }
+
+            // Function to show all activities
+            function showAll() {
+                document.getElementById('allActivitiesTable').style.display = 'block';
+                document.getElementById('updateActivity').style.display = 'none';
+                document.getElementById('deleteActivity').style.display = 'none';
+                document.getElementById('createActivity').style.display = 'none';
+            }
+
+            // Function to show update table
+            function showUpdate() {
+                document.getElementById('allActivitiesTable').style.display = 'none';
+                document.getElementById('updateActivity').style.display = 'block';
+                document.getElementById('deleteActivity').style.display = 'none';
+                document.getElementById('createActivity').style.display = 'none';
+            }
+
+            // Function to show delete table
+            function showDelete() {
+                document.getElementById('allActivitiesTable').style.display = 'none';
+                document.getElementById('updateActivity').style.display = 'none';
+                document.getElementById('deleteActivity').style.display = 'block';
+                document.getElementById('createActivity').style.display = 'none';
+            }
+
+            // Function to show create table
+            function showCreate() {
+                document.getElementById('allActivitiesTable').style.display = 'none';
+                document.getElementById('updateActivity').style.display = 'none';
+                document.getElementById('deleteActivity').style.display = 'none';
+                document.getElementById('createActivity').style.display = 'block';
+            }
+
+            // Function to update an existing activity
+            function updateActivity() {
+                var activityId = document.getElementById('activityId').value;
+                var studentGroup = document.getElementById('studentGroup').value;
+                var module = document.getElementById('module').value;
+                var staff = document.getElementById('staff').value;
+                var activityType = document.getElementById('activityType').value;
+                var activityDuration = document.getElementById('activityDuration').value;
+
+                $.ajax({
+                    'url': '/activities/' + activityId,
+                    'method': 'PUT',
+                    'data': JSON.stringify({
+                        student_group: studentGroup,
+                        module_name: module,
+                        staff_name: staff,
+                        activity_type: activityType,
+                        activity_duration: activityDuration
+                    }),
+                    'contentType': 'application/json',
+                    'success': function(result) {
+                        console.log(result);
+                        getActivities();
+                        populateTable(activities);
+                        showAll();
+                    }
+                });
+            }
+
+            // Function to delete an existing activity
+            function deleteActivity() {
+                var activityId = document.getElementById('deleteActivityId').value;
+
+                $.ajax({
+                    'url': '/activities/' + activityId,
+                    'method': 'DELETE',
+                    'success': function(result) {
+                        console.log(result);
+                        activities = {};
+                        getActivities();
+                        populateTable(activities);
+                        showAll();
+                    }
+                });
+            }
+
+            //Function to create a new activity
+            function createActivity() {
+                var activityType = document.getElementById('activityTypeCreate').value;
+                var activityDuration = document.getElementById('activityDurationCreate').value;
+                var studentGroup = document.getElementById('studentGroupCreate').value;
+                var staffName = document.getElementById('staffCreate').value;
+                var moduleName = document.getElementById('moduleCreate').value;
+
+                $.ajax({
+                    'url': '/activities',
+                    'method': 'POST',
+                    'data': JSON.stringify({
+                        activity_type: activityType,
+                        activity_duration: activityDuration,
+                        student_group: studentGroup,
+                        staff_name: staffName,
+                        module_name: moduleName
+                    }),
+                    'contentType': 'application/json',
+                    'success': function(result) {
+                        console.log(result);
+                        getActivities();
+                        populateTable(activities);
+                        showAll();
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>
